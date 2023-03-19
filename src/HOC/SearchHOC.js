@@ -1,25 +1,44 @@
-import { useMemo, useState } from "react";
-import debounce from "../utils/debounce";
+import { useEffect, useState, useRef, useCallback } from "react";
+import { debouncedSetQuery, filterResults } from "./utility";
 import "../styles/SearchHOC.css";
 
 export default function SearchHOC(ListCompo) {
   // eslint-disable-next-line react/prop-types
   return function SerachList({ data = [] }) {
     const [query, setQuery] = useState("");
-    console.log(query);
+    const [loading, setLoading] = useState(false);
+    const [filteredData, setFilteredData] = useState([]);
+    const prevQueryRef = useRef(query);
+    const lastVisitedRef = useRef(-1);
 
-    const debouncedSetQuery = useMemo(() => {
-      return debounce((value) => {
-        setQuery(value);
-      }, 300);
-    }, []);
-
-    const filteredData = useMemo(() => {
-      if (query === "") return data;
-      return data.filter((item) => {
-        return item.search(new RegExp(query, "i")) > -1;
-      });
+    useEffect(() => {
+      filterResults(
+        filteredData,
+        setFilteredData,
+        data,
+        query,
+        prevQueryRef,
+        lastVisitedRef,
+        setLoading,
+      );
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [query, data]);
+
+    const loadNextResults = useCallback(() => {
+      filterResults(
+        filteredData,
+        setFilteredData,
+        data,
+        query,
+        prevQueryRef,
+        lastVisitedRef,
+        setLoading,
+      );
+    }, [query, data, filteredData]);
+    const dataStatus =
+      lastVisitedRef.current === data.length - 1
+        ? "All results displayed"
+        : "Scroll to load more...";
 
     return (
       <div className="search-list-container">
@@ -27,12 +46,17 @@ export default function SearchHOC(ListCompo) {
           <input
             className="input-search"
             onChange={(e) => {
-              debouncedSetQuery(e.target.value);
+              if (!loading) setLoading(true);
+              debouncedSetQuery(setQuery, e.target.value);
             }}
             placeholder="Search..."
           />
+          {loading ? <span>Loading ...</span> : null}
         </div>
-        <ListCompo data={filteredData} />
+        <b>{filteredData.length === 0 ? "No results found" : dataStatus}</b>
+        {filteredData.length > 0 ? (
+          <ListCompo data={filteredData} loadNextResults={loadNextResults} />
+        ) : null}
       </div>
     );
   };

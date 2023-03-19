@@ -1,5 +1,5 @@
 .input-container{
-  margin: 25px auto;
+  padding: 50px;
 }
 .input-search{
   width: 400px;
@@ -8,5 +8,5 @@
 }
 .search-list-container{
   width: 60%;
-  margin: 100px auto;
+  margin: 0 auto;
 }
