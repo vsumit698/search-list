@@ -1,0 +1,12 @@
+.input-container{
+  margin: 25px auto;
+}
+.input-search{
+  width: 400px;
+  height: 25px;
+  border-radius: 10px;
+}
+.search-list-container{
+  width: 60%;
+  margin: 100px auto;
+}
