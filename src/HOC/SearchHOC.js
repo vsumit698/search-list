@@ -50,6 +50,7 @@ export default function SearchHOC(ListCompo) {
               debouncedSetQuery(setQuery, e.target.value);
             }}
             placeholder="Search..."
+            aria-describedby="Type Here to search in list, to get all results scroll down till end"
           />
           {loading ? <span>Loading ...</span> : null}
         </div>

@@ -13,6 +13,11 @@ function App() {
     <div className={theme === lightTheme ? "App light" : "App dark"}>
       <button
         type="button"
+        aria-label={
+          theme === lightTheme
+            ? "Switch to dark theme"
+            : "Switch to light theme"
+        }
         onClick={() => {
           setTheme(theme === lightTheme ? darkTheme : lightTheme);
         }}
