@@ -52,7 +52,7 @@ export default function SearchHOC(ListCompo) {
             placeholder="Search..."
             aria-describedby="Type Here to search in list, to get all results scroll down till end"
           />
-          {loading ? <span>Loading ...</span> : null}
+          {loading ? <div>Loading ...</div> : null}
         </div>
         <b>{filteredData.length === 0 ? "No results found" : dataStatus}</b>
         {filteredData.length > 0 ? (
